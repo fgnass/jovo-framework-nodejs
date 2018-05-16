@@ -58,6 +58,27 @@ describe('SpeechBuilder Class', function() {
         });
     });
 
+    describe('addSub', function() {
+        const alexaMock = {getType: () => 'AlexaSkill'};
+        const googleMock = {getType: () => 'GoogleAction'};
+
+        it('should use the alias', function() {
+            const speech = new SpeechBuilder();
+            speech.addSub('potato', 'potaito');
+            assert.equal(speech.build(), '<sub alias="potaito">potato</sub>');
+        });
+        it('should use the text without alias', function() {
+            const speech = new SpeechBuilder(googleMock);
+            speech.addSub('potato', {AlexaSkill: 'potaito'});
+            assert.equal(speech.build(), 'potato');
+        });
+        it('should use the alexa alias', function() {
+            const speech = new SpeechBuilder(alexaMock);
+            speech.addSub('potato', {AlexaSkill: 'potaito'});
+            assert.equal(speech.build(), '<sub alias="potaito">potato</sub>');
+        });
+    });
+
     describe('addBreak', function() {
         it('should return a valid ssml break tag', function() {
             let speech = (new SpeechBuilder())
